@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #080808;
+  color: #fff;
+  padding-bottom: 140px;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  text-align: center;
+  padding: 18px 12px;
+  background: #050505;
+  border-bottom: 3px solid #f5d21f;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.section {
+  padding: 14px;
+  background: #111;
+  margin: 12px;
+  border-radius: 14px;
+  border: 1px solid #2a2a2a;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 6px;
+  color: #f5d21f;
+  font-weight: 700;
+}
+
+input, select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px;
+  border-radius: 12px;
+  border: 1px solid #333;
+  background: #f7f7f7;
+  font-size: 16px;
+}
+
+h2 {
+  margin: 22px 14px 10px;
+  padding-bottom: 6px;
+  color: #f5d21f;
+  font-size: 24px;
+  border-bottom: 2px solid #f5d21f;
+  text-transform: uppercase;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 10px 12px;
+  padding: 14px;
+  background: linear-gradient(180deg, #1a1a1a, #101010);
+  border: 1px solid #2c2c2c;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+}
+
+.item strong {
+  font-size: 17px;
+  color: #fff;
+}
+
+.desc {
+  margin-top: 5px;
+  font-size: 13px;
+  line-height: 1.3;
+  color: #cfcfcf;
+}
+
+.price {
+  margin-top: 7px;
+  color: #f5d21f;
+  font-weight: 900;
+}
+
+.qty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.qty span {
+  min-width: 22px;
+  text-align: center;
+  font-weight: 800;
+}
+
+button {
+  background: #f5d21f;
+  color: #111;
+  border: none;
+  padding: 9px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 900;
+}
+
+.basket {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  background: #050505;
+  padding: 14px;
+  border-top: 3px solid #f5d21f;
+  box-shadow: 0 -6px 18px rgba(0,0,0,0.45);
+}
+
+.basketItems {
+  max-height: 70px;
+  overflow-y: auto;
+  font-size: 14px;
+  color: #ddd;
+  margin-bottom: 8px;
+}
+
+#basketTotal {
+  font-size: 22px;
+  font-weight: 900;
+  color: #f5d21f;
+  margin-bottom: 8px;
+}
+
+.basket button {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  border-radius: 12px;
+}
+
+@media (min-width: 700px) {
+  #menu {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  h2 {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 600px) {
+  body {
+    font-size: 15px;
+    padding-bottom: 170px;
+  }
+
+  .header {
+    font-size: 22px;
+    padding: 14px 10px;
+  }
+
+  .section {
+    margin: 8px;
+    padding: 12px;
+  }
+
+  h2 {
+    font-size: 21px;
+    margin: 18px 10px 8px;
+  }
+
+  .item {
+    margin: 8px 10px;
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .item strong {
+    font-size: 16px;
+  }
+
+  .desc {
+    font-size: 12.5px;
+  }
+
+  .qty {
+    flex-direction: column-reverse;
+    gap: 6px;
+  }
+
+  .qty button {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    font-size: 20px;
+  }
+
+  .qty span {
+    font-size: 16px;
+  }
+
+  input, select {
+    font-size: 16px;
+    padding: 14px;
+  }
+
+  .basket {
+    padding: 12px;
+  }
+
+  .basketItems {
+    max-height: 85px;
+    font-size: 13px;
+  }
+
+  #basketTotal {
+    font-size: 20px;
+  }
+
+  .basket button {
+    height: 48px;
+    font-size: 16px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">🍟 PARM-O-RAMA</div>
+
+<div class="section">
+  <label>📍 Location</label>
+  <select id="location" onchange="loadTimes(this.value)"></select>
+
+  <div class="section">
+
+  <label>👤 Name</label>
+  <input id="name" placeholder="Your name" style="width:50%%;padding:10px;border-radius:8px;margin-bottom:10px;">
+
+  <label>📞 Phone</label>
+  <input id="phone" placeholder="Phone number" style="width:100%;padding:10px;border-radius:8px;margin-bottom:10px;">
+
+  <label>📧 Email</label>
+  <input id="email" placeholder="Email" style="width:100%;padding:10px;border-radius:8px;margin-bottom:10px;">
+
+</div>
+
+  <label>⏰ Time</label>
+  <select id="time"></select>
+</div>
+
+<div id="menu"></div>
+
+<div class="basket">
+  <div class="basketItems" id="basketItems"></div>
+  <div id="basketTotal">£0</div>
+  <button id="orderBtn" onclick="order()">ORDER</button>
+</div>
+
+<script>
+  let orderSubmitting = false;
+
+const menu = [
+  {
+    section: "Parmos",
+    items: [
+      {name:"Proper Parmo", price:13.50, desc:"Panko breaded chicken breast, signature creamy béchamel sauce and melted cheese."},
+      {name:"Hotshot Parmo", price:14.50, desc:"Proper parmo topped with spicy chorizo, jalapeños and chilli flakes with hot chilli dip."},
+      {name:"Salt N Pepper Parmo", price:14.50, desc:"Proper parmo topped with fried onions, peppers, salt & chilli spice, spring onions and sriracha mayo dip."},
+      {name:"Hunters Parmo", price:15.00, desc:"Proper parmo topped with bacon and BBQ sauce."},
+      {name:"Buffalo Bill", price:14.50, desc:"Proper parmo topped with honey buffalo, ranch and pickles."},
+      {name:"The Aussie Parmo", price:14.00, desc:"Panko breaded chicken breast topped with tomato & herb sauce and melted cheese."},
+      {name:"Veggie Parmo", price:13.50, desc:"Panko breaded cauliflower steak topped with creamy béchamel sauce and melted cheese."},
+      {name:"Vegan Parmo", price:13.50, desc:"Panko breaded cauliflower steak topped with vegan béchamel sauce and vegan cheese."}
+    ]
+  },
+  {
+    section: "Burgers",
+    items: [
+      {name:"Parmo In A Bun", price:13.00, desc:"Parmo, pickled cabbage and garlic mayo. Served with skin on fries."},
+      {name:"Cluck Norris", price:13.00, desc:"Honey buffalo chicken, lettuce, ranch and pickles. Served with skin on fries."},
+      {name:"Plain Jane", price:13.00, desc:"Fried chicken, lettuce and mayo. Served with skin on fries."},
+      {name:"Mother Clucker", price:13.00, desc:"Fried chicken, bacon, American cheese, lettuce, BBQ sauce and ranch. Served with skin on fries."},
+      {name:"Wok N Roll", price:13.00, desc:"Fried chicken, salt & chilli seasoning, fried onions & peppers, lettuce, sriracha mayo, hoisin sauce, spring onions and sesame seeds. Served with skin on fries."}
+    ]
+  },
+  {
+    section: "Loaded Fries",
+    items: [
+      {name:"Parm-O-Rama Fries", price:10.00, desc:"Skin on fries topped with mini parmos, melted cheese and garlic dip."},
+      {name:"Salt N Pepper Fries", price:9.00, desc:"Fried chicken, salt & chilli seasoning, fried onions, peppers, sriracha mayo, hoisin sauce, spring onions and sesame seeds."},
+      {name:"Holy Cluck!", price:9.00, desc:"Fries, fried chicken, melted cheese, bacon, BBQ sauce and chives."},
+      {name:"Buffalo Fries", price:9.00, desc:"Fried chicken, honey buffalo sauce, ranch, pickles and chives."}
+    ]
+  },
+  {
+    section: "Fried Chicken",
+    items: [
+      {name:"Love Me Tenders", price:12.00, desc:"Chicken tenders served with skin on fries and choice of dip."},
+      {name:"Buffalo Soldiers", price:12.00, desc:"Chicken tenders topped with house buffalo, ranch and pickles. Served with skin on fries."},
+      {name:"Kids Meal", price:7.00, desc:"100% chicken breast bites with skin on fries and ketchup dip."}
+    ]
+  },
+  {
+    section: "Sides",
+    items: [
+      {name:"Halloumi Fries", price:7.50, desc:"Fried halloumi topped with yoghurt & mint dressing, pomegranate seeds, chilli flakes and chives."},
+      {name:"Cheesy Chips", price:5.00, desc:"Skin on fries with proper melted cheese."},
+      {name:"Seasoned Fries", price:4.00, desc:"Crispy seasoned skin on fries."}
+    ]
+  },
+  {
+    section: "Dips",
+    items: [
+      {name:"Garlic Mayo Dip", price:1.20, desc:"Regular dip."},
+      {name:"BBQ Dip", price:1.20, desc:"Regular dip."},
+      {name:"Honey Buffalo Dip", price:1.20, desc:"Regular dip."},
+      {name:"Sriracha Mayo Dip", price:1.20, desc:"Regular dip."},
+      {name:"Hot Chilli Dip", price:1.20, desc:"Regular dip."},
+      {name:"Ranch Dip", price:1.20, desc:"Regular dip."},
+      {name:"Ketchup Dip", price:1.20, desc:"Regular dip."},
+      {name:"Vegan Mayo Dip", price:1.20, desc:"Regular dip."},
+      {name:"Large Dip", price:2.00, desc:"Large dip portion."}
+    ]
+  }
+];
+
+let basket = {};
+
+function renderMenu() {
+  const wrap = document.getElementById("menu");
+  wrap.innerHTML = "";
+
+  menu.forEach(section => {
+    const h = document.createElement("h2");
+    h.textContent = section.section;
+    wrap.appendChild(h);
+
+    section.items.forEach(item => {
+      const div = document.createElement("div");
+      div.className = "item";
+
+      div.innerHTML = `
+        <div>
+          <strong>${item.name}</strong>
+          <div class="desc">${item.desc}</div>
+          <div class="price">£${item.price.toFixed(2)}</div>
+        </div>
+        <div class="qty">
+          <button onclick="change('${item.name}', -1)">-</button>
+          <span id="q_${item.name.replaceAll(" ","_").replaceAll("'","")}">0</span>
+          <button onclick="change('${item.name}', 1)">+</button>
+        </div>
+      `;
+
+      wrap.appendChild(div);
+    });
+  });
+}
+
+function change(name, delta) {
+  basket[name] = (basket[name] || 0) + delta;
+  if (basket[name] < 0) basket[name] = 0;
+
+  document.getElementById("q_"+name.replaceAll(" ","_").replaceAll("'","")).innerText = basket[name];
+  updateBasket();
+}
+
+function updateBasket() {
+  let total = 0;
+  let text = "";
+
+  for (let k in basket) {
+    if (basket[k] > 0) {
+      const item = menu.flatMap(s => s.items).find(x => x.name === k);
+      total += item.price * basket[k];
+      text += `${basket[k]}x ${k}<br>`;
+    }
+  }
+
+  document.getElementById("basketItems").innerHTML = text;
+  document.getElementById("basketTotal").innerText = "£" + total.toFixed(2);
+}
+
+function order() {
+  if (orderSubmitting) return;
+  orderSubmitting = true;
+
+  const btn = document.getElementById("orderBtn");
+  if (btn) {
+    btn.disabled = true;
+    btn.innerText = "SENDING...";
+    btn.style.pointerEvents = "none";
+    btn.style.opacity = "0.5";
+  }
+
+  const items = Object.keys(basket)
+    .filter(k => basket[k] > 0)
+    .map(k => basket[k] + "x " + k)
+    .join(", ");
+
+  if (!items) {
+    alert("Add items");
+    resetOrderButton();
+    return;
+  }
+
+  const name = document.getElementById("name").value;
+  const phone = document.getElementById("phone").value;
+  const email = document.getElementById("email").value;
+  const loc = document.getElementById("location").value;
+  const time = document.getElementById("time").value;
+
+  if (!name || !phone) {
+    alert("Enter name and phone");
+    resetOrderButton();
+    return;
+  }
+
+  if (!time) {
+    alert("Please choose an available collection time");
+    resetOrderButton();
+    return;
+  }
+
+  google.script.run
+    .withSuccessHandler(() => {
+      showOrderSuccess();
+      resetOrderButton();
+    })
+    .withFailureHandler(err => {
+      alert(err.message || "That time has just filled. Please choose another time.");
+      loadTimes();
+      resetOrderButton();
+    })
+    .submitOrder({
+      name: name,
+      phone: phone,
+      email: email,
+      location: loc,
+      time: time,
+      order: items
+    });
+}
+
+function resetOrderButton() {
+  orderSubmitting = false;
+
+  const btn = document.getElementById("orderBtn");
+  if (btn) {
+    btn.disabled = false;
+    btn.innerText = "ORDER";
+    btn.style.pointerEvents = "auto";
+    btn.style.opacity = "1";
+  }
+}
+
+function showOrderSuccess() {
+  const box = document.createElement("div");
+  box.innerHTML = `
+    <div style="position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:99999;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;font-family:Arial,sans-serif;">
+      <div style="background:#000;color:#fff;border:3px solid #f5d21f;border-radius:18px;padding:28px;max-width:420px;">
+        <div style="font-size:34px;font-weight:900;color:#f5d21f;margin-bottom:12px;">🍟 PARM-O-RAMA</div>
+        <h2 style="color:#2ecc71;">Order sent ✅</h2>
+        <p>Your order is in the kitchen.</p>
+        <p style="color:#ccc;">Please check your email for confirmation.</p>
+        <button onclick="location.reload()" style="margin-top:18px;background:#f5d21f;color:#111;border:none;border-radius:10px;padding:12px 20px;font-weight:900;">
+          ORDER AGAIN
+        </button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(box);
+}
+// LOAD DATA FROM YOUR SYSTEM
+function loadLocations() {
+  google.script.run.withSuccessHandler((locs) => {
+    const sel = document.getElementById("location");
+    sel.innerHTML = "";
+
+    locs.forEach(l => {
+      const o = document.createElement("option");
+      o.value = l;
+      o.textContent = l;
+      sel.appendChild(o);
+    });
+
+    loadTimes();
+  }).getLocationsForVan("ALL");
+}
+
+function loadTimes(loc) {
+  var sel = document.getElementById("time");
+  var locationSel = document.getElementById("location");
+  var location = loc || (locationSel ? locationSel.value : "");
+
+  sel.innerHTML = "";
+
+  google.script.run
+    .withSuccessHandler(function(times) {
+      sel.innerHTML = "";
+
+      if (!times || times.length === 0) {
+        var o = document.createElement("option");
+        o.value = "";
+        o.textContent = "No times available";
+        o.disabled = true;
+        sel.appendChild(o);
+        return;
+      }
+
+      times.forEach(function(t) {
+        var o = document.createElement("option");
+
+        if (typeof t === "string") {
+          o.value = t;
+          o.textContent = t;
+          o.disabled = false;
+        } else {
+          o.value = t.value || "";
+          o.textContent = t.label || t.value || "";
+          o.disabled = !!t.disabled;
+        }
+
+        sel.appendChild(o);
+      });
+    })
+    .getAvailableTabletTimes(location);
+}
+
+renderMenu();
+loadLocations();
+
+</script>
+
+</body>
+</html>
