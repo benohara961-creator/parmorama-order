@@ -432,24 +432,23 @@ function order() {
     return;
   }
 
-  google.script.run
-    .withSuccessHandler(() => {
-      showOrderSuccess();
-      resetOrderButton();
-    })
-    .withFailureHandler(err => {
-      alert(err.message || "That time has just filled. Please choose another time.");
-      loadTimes();
-      resetOrderButton();
-    })
-    .submitOrder({
-      name: name,
-      phone: phone,
-      email: email,
-      location: loc,
-      time: time,
-      order: items
-    });
+window.handleSubmit = function(res) {
+  showOrderSuccess();
+  resetOrderButton();
+};
+
+const script = document.createElement("script");
+script.src =
+  "https://script.google.com/macros/s/AKfycbwQAOgZm1b1UrnYKCksW5UWJoxjFLrl7Qx_BmjOvhI6_44BGujaCWnZUwRJizuTs_rs/exec?action=submit" +
+  "&name=" + encodeURIComponent(name) +
+  "&phone=" + encodeURIComponent(phone) +
+  "&email=" + encodeURIComponent(email) +
+  "&location=" + encodeURIComponent(loc) +
+  "&time=" + encodeURIComponent(time) +
+  "&order=" + encodeURIComponent(items) +
+  "&callback=handleSubmit";
+
+document.body.appendChild(script);
 }
 
 function resetOrderButton() {
