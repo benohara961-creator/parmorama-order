@@ -448,8 +448,12 @@ script.src =
   "&order=" + encodeURIComponent(items) +
   "&callback=handleSubmit";
 
-document.body.appendChild(script);
-}
+  document.body.appendChild(script);
+
+setTimeout(function() {
+  showOrderSuccess();
+  resetOrderButton();
+}, 1500);
 
 function resetOrderButton() {
   orderSubmitting = false;
