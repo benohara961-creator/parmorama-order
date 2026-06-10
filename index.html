@@ -546,6 +546,10 @@ function loadTimes(loc) {
   script.src = "https://script.google.com/macros/s/AKfycbwQAOgZm1b1UrnYKCksW5UWJoxjFLrl7Qx_BmjOvhI6_44BGujaCWnZUwRJizuTs_rs/exec?action=times&location=" + encodeURIComponent(location) + "&callback=handleTimes";
   document.body.appendChild(script);
 }
+  setTimeout(function() {
+  showOrderSuccess();
+  resetOrderButton();
+}, 1500);
 
 renderMenu();
 loadLocations();
