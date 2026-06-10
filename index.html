@@ -501,10 +501,7 @@ function loadLocations() {
   script.src = "https://script.google.com/macros/s/AKfycbwQAOgZm1b1UrnYKCksW5UWJoxjFLrl7Qx_BmjOvhI6_44BGujaCWnZUwRJizuTs_rs/exec?action=data&callback=handleLocations";
   document.body.appendChild(script);
 }
-  setTimeout(function() {
-  showOrderSuccess();
-  resetOrderButton();
-}, 1500);
+
 
 function loadTimes(loc) {
   var sel = document.getElementById("time");
