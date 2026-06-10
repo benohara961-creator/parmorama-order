@@ -483,19 +483,23 @@ function showOrderSuccess() {
 }
 // LOAD DATA FROM YOUR SYSTEM
 function loadLocations() {
-  google.script.run.withSuccessHandler((locs) => {
-    const sel = document.getElementById("location");
-    sel.innerHTML = "";
+  fetch("https://script.google.com/macros/s/AKfycbwQAOgZm1b1UrnYKCksW5UWJoxjFLrl7Qx_BmjOvhI6_44BGujaCWnZUwRJizuTs_rs/exec?action=data")
+    .then(function(response) {
+      return response.json();
+    })
+    .then(function(data) {
+      const sel = document.getElementById("location");
+      sel.innerHTML = "";
 
-    locs.forEach(l => {
-      const o = document.createElement("option");
-      o.value = l;
-      o.textContent = l;
-      sel.appendChild(o);
+      data.locations.forEach(function(l) {
+        const o = document.createElement("option");
+        o.value = l;
+        o.textContent = l;
+        sel.appendChild(o);
+      });
+
+      loadTimes();
     });
-
-    loadTimes();
-  }).getLocationsForVan("ALL");
 }
 
 function loadTimes(loc) {
