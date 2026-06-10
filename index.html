@@ -483,23 +483,23 @@ function showOrderSuccess() {
 }
 // LOAD DATA FROM YOUR SYSTEM
 function loadLocations() {
-  fetch("https://script.google.com/macros/s/AKfycbwQAOgZm1b1UrnYKCksW5UWJoxjFLrl7Qx_BmjOvhI6_44BGujaCWnZUwRJizuTs_rs/exec?action=data")
-    .then(function(response) {
-      return response.json();
-    })
-    .then(function(data) {
-      const sel = document.getElementById("location");
-      sel.innerHTML = "";
+  window.handleLocations = function(data) {
+    const sel = document.getElementById("location");
+    sel.innerHTML = "";
 
-      data.locations.forEach(function(l) {
-        const o = document.createElement("option");
-        o.value = l;
-        o.textContent = l;
-        sel.appendChild(o);
-      });
-
-      loadTimes();
+    data.locations.forEach(function(l) {
+      const o = document.createElement("option");
+      o.value = l;
+      o.textContent = l;
+      sel.appendChild(o);
     });
+
+    loadTimes();
+  };
+
+  const script = document.createElement("script");
+  script.src = "https://script.google.com/macros/s/AKfycbwQAOgZm1b1UrnYKCksW5UWJoxjFLrl7Qx_BmjOvhI6_44BGujaCWnZUwRJizuTs_rs/exec?action=data&callback=handleLocations";
+  document.body.appendChild(script);
 }
 
 function loadTimes(loc) {
@@ -509,37 +509,38 @@ function loadTimes(loc) {
 
   sel.innerHTML = "";
 
-fetch("https://script.google.com/macros/s/AKfycbwQAOgZm1b1UrnYKCksW5UWJoxjFLrl7Qx_BmjOvhI6_44BGujaCWnZUwRJizuTs_rs/exec?action=times&location=" + encodeURIComponent(location))
-  .then(response => response.json())
-  .then(function(times)  {
-      sel.innerHTML = "";
+  window.handleTimes = function(times) {
+    sel.innerHTML = "";
 
-      if (!times || times.length === 0) {
-        var o = document.createElement("option");
-        o.value = "";
-        o.textContent = "No times available";
-        o.disabled = true;
-        sel.appendChild(o);
-        return;
+    if (!times || times.length === 0) {
+      var o = document.createElement("option");
+      o.value = "";
+      o.textContent = "No times available";
+      o.disabled = true;
+      sel.appendChild(o);
+      return;
+    }
+
+    times.forEach(function(t) {
+      var o = document.createElement("option");
+
+      if (typeof t === "string") {
+        o.value = t;
+        o.textContent = t;
+        o.disabled = false;
+      } else {
+        o.value = t.value || "";
+        o.textContent = t.label || t.value || "";
+        o.disabled = !!t.disabled;
       }
 
-      times.forEach(function(t) {
-        var o = document.createElement("option");
+      sel.appendChild(o);
+    });
+  };
 
-        if (typeof t === "string") {
-          o.value = t;
-          o.textContent = t;
-          o.disabled = false;
-        } else {
-          o.value = t.value || "";
-          o.textContent = t.label || t.value || "";
-          o.disabled = !!t.disabled;
-        }
-
-        sel.appendChild(o);
-      });
-    })
-  });
+  const script = document.createElement("script");
+  script.src = "https://script.google.com/macros/s/AKfycbwQAOgZm1b1UrnYKCksW5UWJoxjFLrl7Qx_BmjOvhI6_44BGujaCWnZUwRJizuTs_rs/exec?action=times&location=" + encodeURIComponent(location) + "&callback=handleTimes";
+  document.body.appendChild(script);
 }
 
 renderMenu();
