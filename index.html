@@ -509,8 +509,9 @@ function loadTimes(loc) {
 
   sel.innerHTML = "";
 
-  google.script.run
-    .withSuccessHandler(function(times) {
+fetch("https://script.google.com/macros/s/AKfycbwQAOgZm1b1UrnYKCksW5UWJoxjFLrl7Qx_BmjOvhI6_44BGujaCWnZUwRJizuTs_rs/exec?action=times&location=" + encodeURIComponent(location))
+  .then(response => response.json())
+  .then(function(times)  {
       sel.innerHTML = "";
 
       if (!times || times.length === 0) {
@@ -538,7 +539,7 @@ function loadTimes(loc) {
         sel.appendChild(o);
       });
     })
-    .getAvailableTabletTimes(location);
+  });
 }
 
 renderMenu();
