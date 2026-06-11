@@ -346,6 +346,10 @@ function renderMenu() {
     wrap.appendChild(h);
 
     section.items.forEach(item => {
+      const stock = window.stockItems || [];
+      const stockRow = stock.find(x => x.item === item.name);
+      if (stockRow && stockRow.available === "NO") return;
+      
       const div = document.createElement("div");
       div.className = "item";
 
@@ -485,6 +489,7 @@ function showOrderSuccess() {
 // LOAD DATA FROM YOUR SYSTEM
 function loadLocations() {
   window.handleLocations = function(data) {
+    window.stockItems = data.stock || [];
     const sel = document.getElementById("location");
     sel.innerHTML = "";
 
