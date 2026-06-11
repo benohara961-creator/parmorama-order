@@ -239,7 +239,7 @@ button {
 
 <div class="section">
   <label>📍 Location</label>
-  <select id="location" onchange="loadTimes(this.value)"></select>
+  <select id="location" onchange="loadTimes(this.value); renderMenu();">
 
   <div class="section">
 
@@ -345,10 +345,17 @@ function renderMenu() {
     h.textContent = section.section;
     wrap.appendChild(h);
 
-    section.items.forEach(item => {
-      const stock = window.stockItems || [];
-      const stockRow = stock.find(x => x.item === item.name);
-      if (stockRow && stockRow.available === "NO") return;
+   const stock = window.stockItems || [];
+const selectedLocation = document.getElementById("location")
+  ? document.getElementById("location").value
+  : "";
+
+const stockRow = stock.find(x =>
+  x.location === selectedLocation &&
+  x.item === item.name
+);
+
+if (stockRow && stockRow.available === "NO") return;
       
       const div = document.createElement("div");
       div.className = "item";
