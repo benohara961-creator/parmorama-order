@@ -346,8 +346,20 @@ function renderMenu() {
     wrap.appendChild(h);
 
  section.items.forEach(item => {
-      
-      const div = document.createElement("div");
+    const stock = window.stockItems || [];
+    const selectedLocation = document.getElementById("location")
+       ? document.getElementById("location").value
+       : "";
+
+    const stockRow = stock.find(x =>
+      x.location === selectedLocation &&
+      x.item === item.name
+     );
+
+    if (stockRow && stockRow.available === "NO") return;  
+   
+    const div = document.createElement("div");
+  
       div.className = "item";
 
       div.innerHTML = `
