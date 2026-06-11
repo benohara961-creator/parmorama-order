@@ -490,6 +490,8 @@ function showOrderSuccess() {
 function loadLocations() {
   window.handleLocations = function(data) {
     window.stockItems = data.stock || [];
+    renderMenu();
+    
     const sel = document.getElementById("location");
     sel.innerHTML = "";
 
@@ -550,7 +552,6 @@ function loadTimes(loc) {
   document.body.appendChild(script);
 }
 
-renderMenu();
 loadLocations();
 
 </script>
