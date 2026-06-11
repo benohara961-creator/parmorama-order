@@ -352,11 +352,11 @@ function renderMenu() {
        : "";
 
     const stockRow = stock.find(x =>
-      x.location === selectedLocation &&
-      x.item === item.name
-     );
+  String(x.location || "").trim() === String(selectedLocation || "").trim() &&
+  String(x.item || "").trim() === String(item.name || "").trim()
+);
 
-    if (stockRow && stockRow.available === "NO") return;  
+if (stockRow && String(stockRow.available || "").trim().toUpperCase() === "NO") return;  
    
     const div = document.createElement("div");
   
